@@ -2,6 +2,14 @@ name: CI
 
 on: [push]
 
+env:
+  APP_BUNDLE_NAME: "App"
+  APP_BUNDLE_PATH: "./build"
+  ARCHIVE_NAME: "Archive"
+  ARCHIVE_PATH: "./Archive.xcarchive"
+  CONFIGURATION: "Release"
+  SCHEME: "Blink"
+
 jobs:
   build:
 
@@ -17,9 +25,14 @@ jobs:
       run: cd KB/JS && yarn
     - name: yarn test
       run: cd KB/JS && yarn test
-    - name: actual build
-      run: set -o pipefail && xcodebuild -project Blink.xcodeproj -scheme Blink -sdk iphoneos -configuration Debug clean build CODE_SIGN_IDENTITY='' CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=NO | tee build.log | xcpretty
-    - uses: actions/upload-artifact@v1
+    - name: Build archive
+      run: |
+        set -o pipefail && xcodebuild -scheme $SCHEME -sdk iphoneos -configuration $CONFIGURATION archive -archivePath $ARCHIVE_PATH
+    - name: Export ipa
+      run: |
+        set -o pipefail && xcodebuild -exportArchive -archivePath $ARCHIVE_NAME -exportOptionsPlist ./devops/exportOptions.plist -exportPath $APP_BUNDLE_PATH
+    - name: Upload ipa
+      uses: actions/upload-artifact@v1
       with:
-        name: my-artifact
-        path: /Users/runner/Library/Developer/Xcode
+        name: ${{ env.APP_BUNDLE_NAME }}
+        path: ${{ env.APP_BUNDLE_PATH }}
