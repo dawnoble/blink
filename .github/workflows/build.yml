@@ -27,7 +27,7 @@ jobs:
       run: cd KB/JS && yarn test
     - name: Build archive
       run: |
-        set -o pipefail && xcodebuild -scheme $SCHEME -sdk iphoneos -configuration $CONFIGURATION archive -archivePath $ARCHIVE_PATH
+        set -o pipefail && xcodebuild -project Blink.xcodeproj -scheme $SCHEME -sdk iphoneos -configuration $CONFIGURATION archive -archivePath $ARCHIVE_PATH CODE_SIGN_IDENTITY='' CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=NO
     - name: Export ipa
       run: |
         set -o pipefail && xcodebuild -exportArchive -archivePath $ARCHIVE_NAME -exportOptionsPlist ./devops/exportOptions.plist -exportPath $APP_BUNDLE_PATH
