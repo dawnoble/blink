@@ -19,3 +19,7 @@ jobs:
       run: cd KB/JS && yarn test
     - name: actual build
       run: set -o pipefail && xcodebuild -project Blink.xcodeproj -scheme Blink -sdk iphoneos -configuration Debug clean build CODE_SIGN_IDENTITY='' CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=NO | tee build.log | xcpretty
+    - uses: actions/upload-artifact@v1
+      with:
+        name: my-artifact
+        path: /Users/runner/Library/Developer/Xcode
