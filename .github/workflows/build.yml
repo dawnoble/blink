@@ -30,7 +30,7 @@ jobs:
         set -o pipefail && xcodebuild -project Blink.xcodeproj -scheme $SCHEME -sdk iphoneos -configuration $CONFIGURATION archive -archivePath $ARCHIVE_PATH CODE_SIGN_IDENTITY='' CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=NO
     - name: Export ipa
       run: |
-        set -o pipefail && xcodebuild -exportArchive -archivePath $ARCHIVE_NAME -exportOptionsPlist ./devops/exportOptions.plist -exportPath $APP_BUNDLE_PATH
+        set -o pipefail && xcodebuild -exportArchive -archivePath $ARCHIVE_NAME -exportPath $APP_BUNDLE_PATH
     - name: Upload ipa
       uses: actions/upload-artifact@v1
       with:
